@@ -1,0 +1,101 @@
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.error_1 {
+	background-color: #FFFFCC; color: RED;
+}
+
+.modal {
+    background-color:#fff;
+    display:none;
+    width:350px;
+    padding:15px;
+    text-align:left;
+    border:2px solid #333;
+ 
+    opacity:1;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    -moz-box-shadow: 0 0 50px #ccc;
+    -webkit-box-shadow: 0 0 50px #ccc;
+  }
+ 
+  .modal h2 {
+    background:url(/media/img/global/info.png) 0 50% no-repeat;
+    margin:0px;
+    padding:10px 0 10px 45px;
+    border-bottom:1px solid #333;
+    font-size:20px;
+  }
+  
+.mask
+ {
+	color: '#ebecff';
+	opacity: 0.9;
+}
+
+.pop-up{
+background-color:#33CCCC;
+padding:15px;
+border:2px solid #000;
+text-align:left;
+}	
+
+.newRow
+{
+border:2px solid black;
+}
+
+
+#userList {
+	border: 1px solid #e3e3e3;
+	background-color: #f2f2f2;
+
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+}
+#userList td, #userList th {
+	padding: 5px;
+	color: #333;
+}
+#userList thead {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	padding: .2em 0 .2em .5em;
+	text-align: left;
+	color: #4B4B4B;
+	background-color: #C8C8C8;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#e3e3e3), color-stop(.6,#B3B3B3));
+	background-image: -moz-linear-gradient(top, #D6D6D6, #B0B0B0, #B3B3B3 90%);
+	border-bottom: solid 1px #999;
+}
+#userList th {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 17px;
+	line-height: 20px;
+	font-style: normal;
+	font-weight: normal;
+	text-align: left;
+	text-shadow: white 1px 1px 1px;
+}
+#userList td {
+	line-height: 20px;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	border-bottom: 1px solid #fff;
+	border-top: 1px solid #fff;
+}
+#userList td:hover {
+	background-color: #fff;
+}
+
+.leftSelect {
+	width: 300px; border: 1px solid red; float: left;
+}
+
+.rightSelect {
+	width: 300px; border: 1px solid red; float: right;
+}
+
+.clear { clear: both;}

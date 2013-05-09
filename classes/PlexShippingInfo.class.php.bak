@@ -1,0 +1,596 @@
+<?php
+include("PlexInfo.class.php");
+
+class PlexShipInfo
+{
+	protected $db;
+	protected $plexObj;
+ 
+        public function __construct($db)
+        {
+            $this->db = $db;
+			$this->plexObj = new PlexInfo($db);
+        }
+		
+		public function GetShippingStatusBySN($plexSN)
+		{
+			if ( is_null($plexSN) || $plexSN == "")
+			{
+				throw new Exception("Error:  Invalid input for ID value.");
+			}
+			
+			$stmt = $this->db->prepare("SELECT T1.ShippingRecordID, T1.PlexRecord, T2.PartNum as ShippingPart, T1.PartQty as ShippingQty, T1.PartID as ShippingPartID, T1.Verified, T1.Locked, T3.PlexSerialNum FROM ShippingRecords T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) INNER JOIN PlexRecords T3 on (T1.PlexRecord = T3.PlexRecordID) WHERE T3.PlexSerialNum = ?");
+			if ($stmt->execute(array($plexSN)))
+			{
+				while ($row = $stmt->fetch())
+				{
+					return($row);
+				}
+			}
+			else
+			{
+				throw new Exception("Error: Unable to execute query.");
+			}
+		}
+		
+		public function GetShippingStatusByID($shippingID)
+		{
+			if ( is_null($shippingID) || $shippingID == "")
+			{
+				throw new Exception("Error:  Invalid input for ID value.");
+			}
+			
+			$stmt = $this->db->prepare("SELECT T1.ShippingRecordID, T1.PlexRecord, T2.PartNum as ShippingPart, T1.PartQty as ShippingQty, T1.PartID as ShippingPartID, T1.Verified, T1.Locked, T3.PlexSerialNum FROM ShippingRecords T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) INNER JOIN PlexRecords T3 on (T1.PlexRecord = T3.PlexRecordID) WHERE T1.ShippingRecordID = ?");
+			if ($stmt->execute(array($shippingID)))
+			{
+				while ($row = $stmt->fetch())
+				{
+					return($row);
+				}
+			}
+			else
+			{
+				throw new Exception("Error: Unable to execute query.");
+			}
+		}
+		
+		public function AddRecord($plexSN, $partNum, $partQty)
+		{
+			$defaultVal = 0;	// Added for default value for locked & verified as putting the value 0 into the query threw binding errors
+			
+			if ( is_null($plexSN) or $plexSN == ""  )
+			{
+				//echo("PlexSN: " . $plexSN . ", PartNum: " . $partNum . ", PartQty: " . $partQty);
+				throw new Exception("Error:  Invalid input for Plex serial number.");
+			}
+			
+			if ( is_null($partNum) or $partNum == ""  )
+				throw new Exception("Error:  Invalid input for part number number.");
+			
+			if ( !preg_match('/^\d+$/',$partQty) or is_null($partQty) or $partQty == "" )
+			{
+				throw new Exception("Error:  Invalid input for part quantity.");
+			}
+				
+			// Check to see if this has already been tried once.
+			$plexShippingInfo = $this->GetShippingStatusBySN($plexSN);
+			
+			if ( is_null($plexShippingInfo) )
+			{
+				// Now get Plex Info for that item
+				$plexInfo = $this->plexObj->GetStatusBySN($plexSN);
+				
+				// Provided we got some information back
+				if ( !is_null($plexInfo) )
+				{
+					if ( $plexInfo["Verified"] != 1 )
+					{
+						throw new Exception("Error:  This record hasn't passed 100% Scan phase yet.");
+					}
+					
+					// Verify part number exists in records:
+					$partID = $this->ValidatePart($partNum);
+					
+					if ( is_null($partID) || $partID === false )
+					{
+						throw new Exception("Error:  Part $partNum does not exist in the database as a known part.");
+					}
+					
+					$validPart = false;
+					// Verify if part ID's match, or if it's a valid alternate ID
+					if ( $partID["PartID"] != $plexInfo["PartID"] )
+					{
+						if ( !$this->ValidAlternate( $plexInfo["PlexRecordID"], $partID["PartID"] ) )
+						{
+							throw new Exception("Error:  Part doesn't match valid part list.");
+						}
+					}
+					
+					// verify quantity matches
+					if ( $partQty != $plexInfo["PartQty"] )
+					{
+						throw new Exception("Error:  Shipping part quantity doesn't match input part quantity.");
+					}
+					
+					// All good, Add Record.
+					$stmt = $this->db->prepare("INSERT INTO ShippingRecords (PlexRecord, ScanUser, ScanTime, PartQty, PartID, Verified, Locked) VALUES (?, ?, NOW(), ?, ?, ?, ?)");
+					if ($stmt->execute(array($plexInfo["PlexRecordID"], $_SESSION['user']['UserID'], $partQty, $partID['PartID'], $defaultVal, $defaultVal)))
+					{
+						return(array("ShippingRecordID" => $this->db->lastInsertId()));
+					}
+					else
+					{
+						throw new Exception("Error:  Error when inserting record into database.");
+					}
+				}
+				else
+				{
+					throw new Exception("Error:  No matching record found in Plex records.");
+				}
+			}
+			else
+			{
+			
+				// Now get Plex Info for that item
+				$plexInfo = $this->plexObj->GetStatusBySN($plexSN);
+				
+				// Provided we got some information back
+				if ( is_null($plexInfo) )
+				{
+					throw new Exception("Error:  Unable to find plex record with serial number $plexSN.");
+				}
+				
+				// Verify part number exists in records:
+				$partID = $this->ValidatePart($partNum);
+				
+				if ( is_null($partID) || $partID === false )
+				{
+					throw new Exception("Error:  Part $partNum does not exist in the database as a known part.");
+				}
+				
+				$validPart = false;
+				// Verify if part ID's match, or if it's a valid alternate ID
+				if ( $partID["PartID"] != $plexInfo["PartID"] )
+				{
+					if ( !$this->ValidAlternate( $plexInfo["PlexRecordID"], $partID["PartID"] ) )
+					{
+						$validPart = false;
+					}
+					else
+					{
+						$validPart = true;
+					}
+				}
+				else
+				{
+					$validPart = true;
+				}
+				// this record already exists, redirect
+				if ( $validPart === true and $plexInfo["PartQty"] == $partQty)
+				{
+					//return(array("PlexRecordID" => $plexInfo["PlexRecordID"]));
+					return(array("ShippingRecordID" => $plexShippingInfo["ShippingRecordID"]));
+				}
+				else
+				{
+					throw new Exception("Error:  Record already exists for Plex Serial $plexSN with different attributes.");
+				}
+			}
+		}
+		
+		/*  This function check the part list to ensure the partSN given exists */
+		private function ValidatePart($partSN)
+		{
+			if ( is_null($partSN) || $partSN == "" )
+			{
+				throw new Exception("Error:  Invalid input for Part Serial Number value.");
+			}
+			
+			$stmt = $this->db->prepare("SELECT PartID FROM PlexParts WHERE PartNum = ? AND Active = 1");
+			if ($stmt->execute(array($partSN)))
+			{
+				if ($stmt->rowCount() == 0)
+				{
+					// No matching record
+					return(false);
+				}
+				else
+				{
+					$row = $stmt->fetch();
+					return($row);
+				}
+			}
+			else
+			{
+				return(false);
+			}
+		}
+		/*  This ValidateAlternate checks to see if the alternate part ID's exist */
+		private function ValidAlternate($plexID, $partID)
+		{
+			if ( !preg_match('/^\d+$/',$plexID) or is_null($plexID) or $plexID == "" )
+			{
+				throw new Exception("Error:  Unable to find valid part alternatives for $plexID");
+			}
+			
+			if ( !preg_match('/^\d+$/',$partID) or is_null($partID) or $partID == "" )
+			{
+				throw new Exception("Error:  Unable to find valid part alternatives for $partID");
+			}
+			
+			$stmt = $this->db->prepare("SELECT * FROM PlexRecords T1 INNER JOIN PlexPartAlternatives T2 on (T1.PartID = T2.MainPartID) WHERE T1.PlexRecordID = ? AND CorrespondingPartID = ?");
+			if ( $stmt->execute(array($plexID, $partID)) )
+			{
+				if ($stmt->rowCount() == 0)
+				{
+					// not a valid match, or no valid matches
+					return(false);
+				}
+				else
+				{
+					return(true);
+				}
+			}
+			else
+			{
+				throw new Exception("Error:  Unable to search for alternate parts for record $plexID and part $partID");
+			}
+		}
+		
+		public function AddPart($shippingID, $partInfo)
+		{
+			// Variables
+			$match;
+			$duplicate;
+			$valid;
+			$plexInfo;
+			
+			if ( is_null($shippingID) || $shippingID == "" || !preg_match('/^\d+$/',$shippingID) )
+			{
+				throw new Exception("Error:  Invalid input for ID value.");
+			}
+			
+			if ( is_null($partInfo) || $partInfo == "")
+			{
+				throw new Exception("Error:  Invalid input for part info value.");
+			}
+			
+			$shippingInfo = $this->GetShippingStatusByID($shippingID);
+			
+			// 4/2/2013, we don't want to lock the record.  Just keep adding, then print DONOTSHIP on barcode if validation fails
+			/*
+			if ($shippingInfo["Locked"])
+			{
+				throw new Exception("Error:  This record is locked.  Cannot add new parts.");
+			}
+			*/
+			
+			$stmt = $this->db->prepare("SELECT RegularExpression FROM Regex INNER JOIN PartRegex ON ( Regex.RegexID = PartRegex.RegexID ) INNER JOIN ShippingRecords ON ( PartRegex.PartID = ShippingRecords.PartID ) WHERE ShippingRecords.ShippingRecordID = ?");
+			if ($stmt->execute(array($shippingID)))
+			{
+				if ($stmt->rowCount() == 0)
+				{
+					// no records found
+					throw new Exception("Error: No regular expression known for this part type.");
+				}
+				$row = $stmt->fetch();
+				
+				preg_match_all("/".$row['RegularExpression']."/", $partInfo, $matches);
+				if(is_array($matches) && count($matches) == 1)
+				{
+					if(is_array($matches{0}) && count($matches{0}) == 2)
+					{
+						// need to add section to regex respoistory that indicates which is the part and which is the serial#
+						$partNum = $matches[0][0];
+						$serialNum = $matches[0][1];
+						
+						// Verify Part# scanned matches Part# for this record
+						$stmt = $this->db->prepare("SELECT PartID FROM PlexParts WHERE PartNum = ?");
+						if ($stmt->execute(array($partNum)))
+						{
+							if ($stmt->rowCount() == 0)
+							{
+								// no records found
+								throw new Exception("Error: No part matched known for this part type.");
+							}
+							$row = $stmt->fetch();
+							$partID = $row['PartID'];
+							
+							// We insert the record regardless.  Just find out if this record is valid.
+							if ($shippingInfo['ShippingPartID'] == $partID)
+								$match=1;
+							else
+								$match=0;
+								
+							// Check for duplicate serial numbers
+							$stmt = $this->db->prepare("SELECT PartID, PartSerialNum FROM ShippingRecordParts WHERE ShippingRecordID = ? AND PartID = ? AND PartSerialNum = ?");
+							if ($stmt->execute(array($shippingID, $partID, $serialNum)))
+							{
+								if ($stmt->rowCount() == 0)
+								{
+									// No Duplicates Found
+									$duplicate = 0;
+								}
+								else
+								{
+									$duplicate = 1;
+								}
+							}
+							
+							// Finally, check if it's a valid match
+							$stmt = $this->db->prepare("SELECT T1.PartID, T1.PartSerialNum FROM PlexPartRecords T1 INNER JOIN ShippingRecords T2 on (T1.PlexRecord = T2.PlexRecord) WHERE T2.ShippingRecordID = ? AND T1.PartID = ? and T1.PartSerialNum = ?");
+							if ( $stmt->execute(array($shippingID, $partID, $serialNum)) )
+							{
+								if ($stmt->rowCount() == 1)
+								{
+									$valid = 1;
+								}
+								else
+								{
+									$valid = 0;
+								}
+							}
+							else
+							{
+								throw new Exception("Error:  Cannot validate $partID - $serialNum against 100% scan records.");
+							}
+							
+							$stmt = $this->db->prepare("INSERT INTO ShippingRecordParts (ShippingRecordID, ScanUser, ScanTime, PartSerialNum, PartID, Match_, Duplicate, Valid) values (?, ?, NOW(), ?, ?, ?, ?, ?)");
+							if ($stmt->execute(array($shippingID, $_SESSION['user']['UserID'], $serialNum, $partID, $match, $duplicate, $valid)))
+							{
+								$lastInsertID = $this->db->lastInsertId();
+								// update plexRecord if $match or $duplicate = 1
+								if ($match == 0 || $duplicate == 1 || $valid == 0)
+								{
+									$this->LockRecord($shippingID);
+								}
+								// Check Part Qty:
+								/*
+								$numParts = $this->GetPartQty($shippingID);
+								if ($numParts["NumParts"] > $plexInfo["PartQty"])
+								{
+									$this->LockRecord($shippingID);
+								}*/
+								
+								return($lastInsertID);
+							}
+							else
+							{
+								throw new Exception("Error:  Unable to insert record.");
+							}
+						}
+					}
+					else
+						throw new Exception("Error:  Unable to match input with regular expression.");
+				//return(htmlspecialchars($row['RegularExpression']));
+				}
+			}
+			else
+			{
+				throw new Exception("Error: Unable to execute query.");
+			}
+		}
+		
+		private function LockRecord($shippingID)
+		{
+			if ( !preg_match('/^\d+$/',$shippingID) || is_null($shippingID) || $shippingID == "" )
+			{
+				throw new Exception("Error:  Invalid Input for Shipping ID value.");
+			}
+		
+			$stmt = $this->db->prepare("UPDATE ShippingRecords SET Locked = 1 WHERE ShippingRecordID = ?");
+			$stmt->execute(array($shippingID));
+		}
+		
+		private function UnlockRecord($shippingID)
+		{
+			if ( is_null($shippingID) or $shippingID == "" or !preg_match('/^\d+$/',$shippingID) )
+			{
+				throw new Exception("Error:  Invalid input for ID value.");
+			}
+			
+			$stmt = $this->db->prepare("UPDATE ShippingRecords SET Locked = 0 WHERE ShippingRecordID = ?");
+			if (!$stmt->execute(array($shippingID)))
+			{
+				throw new Exception("Error:  Unable to update Locked value for selected Shipping record.");
+			}
+			
+		}
+		
+		public function GetParts($shippingID)
+		{
+			// Modify this section to indicate wheither or not the part matches the partID it's supposed to and the SN isn't a duplicate
+			$partList = array();
+			if ( is_null($shippingID) || $shippingID == "")
+			{
+				throw new Exception("Error:  Invalid input for ID value.");
+			}
+			
+			$stmt = $this->db->prepare("SELECT T1.ShippingRecordPartID, T2.PartNum as PartNum, T1.PartSerialNum, T1.PartID, T1.Match_, T1.Duplicate, T1.Valid, T1.ScanUser, concat(T3.first_name, ' ', T3.last_name) as UserName  FROM ShippingRecordParts T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) INNER JOIN UserDB T3 on (T1.ScanUser = T3.UserID) WHERE T1.ShippingRecordID = ?");
+			if ($stmt->execute(array($shippingID)))
+			{
+				// PDO::FETCH_ASSOC == Return as associatiave array, should do this by default based on db.inc
+				while ($row = $stmt->fetch())
+				{
+					array_push($partList, $row);
+				}
+				
+				return($partList);
+			}
+			else
+			{
+				throw new Exception("Error: Unable to execute query.");
+			}
+		}
+		
+		public function RemovePart($shippingID, $shippingPartID)
+		{
+			$grantAccess = false;
+			if ( $_SESSION['SupervisorAccess'] == true || $_SESSION['AdminAccess'] == true )
+			$grantAccess = true;
+			
+			if(!$grantAccess)
+			{
+				throw new Exception ("Error:  You do not have permission to remove records.");
+			}
+		
+			if ( is_null($shippingID) || $shippingID == "" || !preg_match('/^\d+$/',$shippingID) )
+			{
+				throw new Exception("Error:  Invalid input for shipping ID value.");
+			}
+			
+			if ( is_null($shippingPartID) || $shippingPartID == "" || !preg_match('/^\d+$/',$shippingPartID) )
+			{
+				throw new Exception("Error:  Invalid input for part ID value.");
+			}
+			
+			$stmt = $this->db->prepare("SELECT ShippingRecordID, ScanUser, ScanTime, PartSerialNum, PartID, Match_, Duplicate, Valid FROM ShippingRecordParts WHERE ShippingRecordID = ? AND ShippingRecordPartID = ?");
+			if ($stmt->execute(array($shippingID, $shippingPartID)))
+			{
+				if ($stmt->rowCount() == 0)
+				{
+					// no records found
+					throw new Exception("Error: No match known for this part record.");
+				}
+				$row = $stmt->fetch();
+				
+				// Copy into Error Table for history
+				$stmt = $this->db->prepare("INSERT INTO ShippingPartErrors (ShippingRecordID, ScanUser, ScanTime, FixUser, FixTime, ErrorPartSerialNum, ErrorPartID, Match_, Duplicate, Valid) values (?, ?, ?, ?, Now(), ?, ?, ?, ?, ?)");
+				if ($stmt->execute(array($row['ShippingRecordID'], $row['ScanUser'], $row['ScanTime'], $_SESSION["user"]["UserID"], $row['PartSerialNum'], $row['PartID'], $row['Match_'], $row['Duplicate'], $row['Valid'])))
+				{
+					// Remove invalid record
+					$stmt = $this->db->prepare("DELETE FROM ShippingRecordParts WHERE ShippingRecordPartID = ?");
+					if($stmt->execute(array($shippingPartID)))
+					{
+						if($this->ValidateParts($shippingID))
+						{
+							$this->UnlockRecord($shippingID);
+						}
+						return "Success";
+					}
+					else
+					{
+						throw new Exception("Error:  Unable to remove selected part record");
+					}
+				}
+				else
+				{
+					throw new Exception("Error:  Unable to remove selected part record");
+				}
+			}
+			else
+			{
+				throw new Exception("Error:  Unable to query records for part removal.");
+			}
+		}
+		
+		public function ValidateParts($shippingID)
+		{
+			if ( is_null($shippingID) or $shippingID == "" or !preg_match('/^\d+$/',$shippingID) )
+			{
+				throw new Exception("Error:  Invalid input for ID value.");
+			}
+			//ShippingPartRecordID
+			
+			// 1:  Make sure the parts in shipping match the parts in the 100% scan
+			$stmt = $this->db->prepare("SELECT T1.ShippingRecordPartID, T1.ShippingRecordID, T1.PartID, T1.PartSerialNum, T2.PlexRecord FROM ShippingRecordParts T1 INNER JOIN ShippingRecords T2 on (T1.ShippingRecordID = T2.ShippingRecordID) WHERE T1.ShippingRecordID = ?");
+			if ($stmt->execute(array($shippingID)))
+			{
+				while ($row = $stmt->fetch())
+				{
+					$noMatch = false;
+					$stmt2 = $this->db->prepare("SELECT * FROM PlexPartRecords WHERE PartID = ? and PartSerialNum = ? and PlexRecord = ?");
+					if ($stmt2->execute(array($row['PartID'], $row['PartSerialNum'], $row['PlexRecord'])))
+					{
+						// Should return 1 row.  If it doesn't, then there's a problem.
+						if ($stmt2->rowCount() != 1)
+						{
+							$noMatch = true;
+						}
+					}
+					
+					// If the above record didn't match, be sure to set the flags in the DB, just incase
+					if ($noMatch)
+					{
+						$stmt2 = $this->db->prepare("UPDATE ShippingRecordParts SET Match_ = 0, Valid = 0 WHERE ShippingRecordPartID = ?");
+						$stmt2->execute(array($row['ShippingRecordPartID']));
+					}
+					else
+					{
+						$stmt2 = $this->db->prepare("UPDATE ShippingRecordParts SET Match_ = 1, Valid = 1 WHERE ShippingRecordPartID = ?");
+						$stmt2->execute(array($row['ShippingRecordPartID']));
+					}
+				}
+			}
+			
+			// 2:  Make sure there arn't duplicates
+			$stmt = $this->db->prepare("SELECT PartSerialNum, count(*) as NumRecords FROM ShippingRecordParts WHERE ShippingRecordID = ? GROUP BY PartSerialNum");
+			if ($stmt->execute(array($shippingID)))
+			{
+				while ($row = $stmt->fetch())
+				{
+					// If only record, set Duplicate to 0.  Do this as if tehre are duplicates, I don't know which one the user deleted.
+					if ($row["NumRecords"] == 1)
+					{
+						$stmt2 = $this->db->prepare("UPDATE ShippingRecordParts SET Duplicate = 0 WHERE ShippingRecordID = ? and PartSerialNum = ?");
+						$stmt2->execute(array($shippingID, $row['PartSerialNum']));
+					}
+					else
+					{
+						// Num records is wrong, set duplicate flag
+						$stmt2 = $this->db->prepare("UPDATE ShippingRecordParts SET Duplicate = 1 WHERE ShippingRecordID = ? and PartSerialNum = ?");
+						$stmt2->execute(array($shippingID, $row['PartSerialNum']));
+					}
+				}
+			}
+			
+			// 3:  Verify the partID matches
+			// Dont think I need to check this right now.
+			// Need to try adding somethign with an invalid partID
+			
+			$stmt = $this->db->prepare("SELECT * FROM ShippingRecordParts WHERE ShippingRecordID = ? and (Duplicate = 1 or Match_ = 0 or Valid = 0)");
+			if ($stmt->execute(array($shippingID)))
+			{
+				if ($stmt->rowCount() == 0)
+				{
+					// no invalid records returned
+					return(true);
+				}
+				else
+				{
+					return(false);
+				}
+			}
+			else
+			{
+				throw new Exception("Error:  Unable to check for validity for shipping record: $shippingID");
+			}
+		}
+		
+		public function GetPartQty($shippingID)
+		{
+			if ( is_null($shippingID) or $shippingID == "" or !preg_match('/^\d+$/',$shippingID) )
+			{
+				throw new Exception("Error:  Invalid input for ID value.");
+			}
+			
+			$stmt = $this->db->prepare("SELECT Count(*) as NumParts FROM ShippingRecordParts WHERE ShippingRecordID = ?");
+			if ($stmt->execute(array($shippingID)))
+			{
+				if ($stmt->rowCount() == 0)
+				{
+					return(array("NumParts" => 0));
+				}
+				else
+				{
+					return($stmt->fetch());
+				}
+			}
+			else
+			{
+				throw new Exception("Error:  Unable to query for part quantity.");
+			}
+		}
+				
+}
+?>
