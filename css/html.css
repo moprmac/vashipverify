@@ -12,9 +12,6 @@
 
 #header h1 { margin: 0; }
 
-
-
-
 #navigation
 {
 	float: left;
@@ -72,6 +69,7 @@
 	bottom: 0;
     height: 30px;
     float:left;
+    position: absolute;
 	width:100%;
 }
 

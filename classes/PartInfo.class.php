@@ -15,7 +15,7 @@ class PartInfo
 				throw new Exception("Error:  Invalid part ID");
 			}
 			
-			$stmt = $this->db->prepare("SELECT T1.PartID, T1.PartNum, T1.PartAdded as DateAdded, T1.Active, T1.PartRetired as DateDeactivated, T1.IntPartNum, T3.RegularExpression FROM PlexParts T1 LEFT OUTER JOIN PartRegex T2 on (T1.PartID = T2.PartID) LEFT OUTER JOIN Regex T3 on (T2.RegexID = T3.RegexID) WHERE T1.PartID = ?");
+			$stmt = $this->db->prepare("SELECT T1.PartID, T1.PartNum, T1.PartAdded as DateAdded, T1.Active, T1.PartRetired as DateDeactivated, T3.RegularExpression FROM PlexParts T1 LEFT OUTER JOIN PartRegex T2 on (T1.PartID = T2.PartID) LEFT OUTER JOIN Regex T3 on (T2.RegexID = T3.RegexID) WHERE T1.PartID = ?");
 			if ($stmt->execute(array($partID)))
 			{
 				return($stmt->fetch());
@@ -54,6 +54,17 @@ class PartInfo
 		public function GetAllParts() {
 			$partList = array();
 			$stmt = $this->db->prepare("SELECT PartID, PartNum from PlexParts WHERE Active = 1 ORDER BY PartNum");
+			if($stmt->execute()){
+				while($row = $stmt->fetch()){
+					array_push($partList, $row);
+				}
+			}
+			return $partList;
+		}
+		
+		public function GetAllInternalParts() {
+			$partList = array();
+			$stmt = $this->db->prepare("SELECT PartID, PartNum from PlexParts WHERE Active = 1 and IntPartNum = 1 ORDER BY PartNum");
 			if($stmt->execute()){
 				while($row = $stmt->fetch()){
 					array_push($partList, $row);
@@ -312,41 +323,4 @@ class PartInfo
 				return(false);
 			}
 		}
-
-		public function AddInternalPart($partID)
-		{
-			if ( is_null($partID) || $partID == "" || !preg_match('/^\d+$/',$partID))
-			{
-				throw new Exception("Error:  Invalid part ID");
-			}
-			
-			$stmt = $this->db->prepare("Update PlexParts SET IntPartNum = 1 WHERE PartID = ?");
-			if ($stmt->execute(array($partID)))
-			{
-				return(true);
-			}
-			else
-			{
-				throw new Exception("Error:  Unable to update IntPartNum status for part ID: $partID");
-			}
-		}
-
-		public function RemoveInternalPart($partID)
-		{
-			if ( is_null($partID) || $partID == "" || !preg_match('/^\d+$/',$partID))
-			{
-				throw new Exception("Error:  Invalid part ID");
-			}
-			
-			$stmt = $this->db->prepare("Update PlexParts SET IntPartNum = 0 WHERE PartID = ?");
-			if ($stmt->execute(array($partID)))
-			{
-				return(true);
-			}
-			else
-			{
-				throw new Exception("Error:  Unable to update active/inactive status for part ID: $partID");
-			}
-		}
-
 }

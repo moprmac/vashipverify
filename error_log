@@ -1,0 +1,24 @@
+[02-May-2013 15:47:04 UTC] PHP Fatal error:  Call to undefined function now() in /home/usuiusa0/public_html/va/shipverify/time.php on line 4
+[02-May-2013 16:51:53 UTC] PHP Parse error:  syntax error, unexpected '<' in /home/usuiusa0/public_html/va/shipverify/time.php on line 4
+[02-May-2013 16:52:17 UTC] PHP Parse error:  syntax error, unexpected '<' in /home/usuiusa0/public_html/va/shipverify/time.php on line 4
+[02-May-2013 16:53:16 UTC] PHP Parse error:  syntax error, unexpected T_DOUBLE_ARROW in /home/usuiusa0/public_html/va/shipverify/time.php on line 31
+[02-May-2013 16:57:16 UTC] PHP Parse error:  syntax error, unexpected ':', expecting ')' in /home/usuiusa0/public_html/va/shipverify/time.php on line 19
+[02-May-2013 16:57:55 UTC] PHP Parse error:  syntax error, unexpected T_CONSTANT_ENCAPSED_STRING, expecting ')' in /home/usuiusa0/public_html/va/shipverify/time.php on line 19
+[02-May-2013 16:58:53 UTC] PHP Parse error:  syntax error, unexpected T_STRING in /home/usuiusa0/public_html/va/shipverify/time.php on line 33
+[02-May-2013 17:00:15 UTC] PHP Parse error:  syntax error, unexpected T_STRING in /home/usuiusa0/public_html/va/shipverify/time.php on line 33
+[02-May-2013 17:00:18 UTC] PHP Parse error:  syntax error, unexpected T_STRING in /home/usuiusa0/public_html/va/shipverify/time.php on line 33
+[02-May-2013 17:04:15 UTC] PHP Parse error:  syntax error, unexpected T_STRING in /home/usuiusa0/public_html/va/shipverify/time.php on line 33
+[02-May-2013 17:04:17 UTC] PHP Parse error:  syntax error, unexpected T_STRING in /home/usuiusa0/public_html/va/shipverify/time.php on line 33
+[02-May-2013 17:04:18 UTC] PHP Parse error:  syntax error, unexpected T_STRING in /home/usuiusa0/public_html/va/shipverify/time.php on line 33
+[02-May-2013 17:29:11 UTC] PHP Parse error:  syntax error, unexpected T_STRING in /home/usuiusa0/public_html/va/shipverify/time.php on line 33
+[02-May-2013 21:20:40 UTC] PHP Fatal error:  Cannot redeclare class SendMail in /home/usuiusa0/public_html/va/shipverify/classes/SendMail.class.php on line 4
+[02-May-2013 21:23:12 UTC] PHP Fatal error:  Cannot redeclare class SendMail in /home/usuiusa0/public_html/va/shipverify/classes/SendMail.class.php on line 4
+[02-May-2013 21:25:23 UTC] PHP Fatal error:  Cannot redeclare class SendMail in /home/usuiusa0/public_html/va/shipverify/classes/SendMail.class.php on line 4
+[02-May-2013 21:27:25 UTC] PHP Fatal error:  Using $this when not in object context in /home/usuiusa0/public_html/va/shipverify/print_ship_validation.php on line 123
+[02-May-2013 21:27:49 UTC] PHP Warning:  Missing argument 2 for SendMail::NotifySupervisor(), called in /home/usuiusa0/public_html/va/shipverify/print_ship_validation.php on line 124 and defined in /home/usuiusa0/public_html/va/shipverify/classes/SendMail.class.php on line 12
+[02-May-2013 21:32:27 UTC] PHP Parse error:  syntax error, unexpected T_STRING in /home/usuiusa0/public_html/va/shipverify/time.php on line 33
+[02-May-2013 22:31:31 UTC] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1142 SELECT command denied to user 'usuiusa0_shipver'@'localhost' for table 'time_zone'' in /home/usuiusa0/public_html/va/shipverify/time.php:44
+Stack trace:
+#0 /home/usuiusa0/public_html/va/shipverify/time.php(44): PDOStatement->execute()
+#1 {main}
+  thrown in /home/usuiusa0/public_html/va/shipverify/time.php on line 44

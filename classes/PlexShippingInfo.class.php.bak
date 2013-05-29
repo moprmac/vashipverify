@@ -406,7 +406,7 @@ class PlexShipInfo
 				throw new Exception("Error:  Invalid input for ID value.");
 			}
 			
-			$stmt = $this->db->prepare("SELECT T1.ShippingRecordPartID, T2.PartNum as PartNum, T1.PartSerialNum, T1.PartID, T1.Match_, T1.Duplicate, T1.Valid, T1.ScanUser, concat(T3.first_name, ' ', T3.last_name) as UserName  FROM ShippingRecordParts T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) INNER JOIN UserDB T3 on (T1.ScanUser = T3.UserID) WHERE T1.ShippingRecordID = ?");
+			$stmt = $this->db->prepare("SELECT T1.ShippingRecordPartID, T2.PartNum as PartNum, T1.PartSerialNum, T1.PartID, T1.Match_, T1.Duplicate, T1.Valid FROM ShippingRecordParts T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) WHERE T1.ShippingRecordID = ?");
 			if ($stmt->execute(array($shippingID)))
 			{
 				// PDO::FETCH_ASSOC == Return as associatiave array, should do this by default based on db.inc

@@ -14,7 +14,7 @@ $barcodeText = $barcodeDetails['BarcodeText'];
 $hriText = $barcodeDetails['HRIText'];
 $hriTextArr = explode("~|~", trim($hriText));
 $size = $barcodeDetails['Size'];
-$barcodeUrl = "barcode.php?code=".$barcodeText."&size=".$size;
+$barcodeUrl = "barcode.php?code=".$barcodeText."&size=".($size+1);
 ?>
 <html>
 	<head>

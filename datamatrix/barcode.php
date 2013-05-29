@@ -2,13 +2,13 @@
   include('./php-barcode.php');
 	
 $code     = $_REQUEST['code']; // barcode, of course ;)
-$width    = $_REQUEST['size']; // barcode height in 1D ; not use in 2D
+$module_width    = $_REQUEST['size']; // barcode height in 1D ; not use in 2D
 
   $fontSize = 8;   // GD1 in px ; GD2 in point
   $marge    = 10;   // between barcode and hri in pixel
-  $x        = $width * 10;  // barcode center
-  $y        = $width * 10;  // barcode center
-  $height   = 0;   // barcode height in 1D ; module size in 2D
+  $x        = $module_width * 10;  // barcode center
+  $y        = $module_width * 10;  // barcode center
+  $module_height   = 0;   // barcode height in 1D ; module size in 2D
       
   $angle    = 0;   // rotation in degrees : nb : non horizontable barcode might not be usable because of pixelisation
   
@@ -27,17 +27,17 @@ $width    = $_REQUEST['size']; // barcode height in 1D ; not use in 2D
   // -------------------------------------------------- //
   //            ALLOCATE GD RESSOURCE
   // -------------------------------------------------- //
-  $im     = imagecreatetruecolor($width * 20, $width * 20);
+  $im     = imagecreatetruecolor($module_width * 20, $module_width * 20);
   $black  = ImageColorAllocate($im,0x00,0x00,0x00);
   $white  = ImageColorAllocate($im,0xff,0xff,0xff);
   $red    = ImageColorAllocate($im,0xff,0x00,0x00);
   $blue   = ImageColorAllocate($im,0x00,0x00,0xff);
-  imagefilledrectangle($im, 0, 0, $width * 20, $width *20, $white);
+  imagefilledrectangle($im, 0, 0, $module_width * 20, $module_width *20, $white);
   
   // -------------------------------------------------- //
   //                      BARCODE
   // -------------------------------------------------- //
-  $data = Barcode::gd($im, $black, $x, $y, $angle, $type, array('code'=>$code), $width, $height);
+  $data = Barcode::gd($im, $black, $x, $y, $angle, $type, array('code'=>$code), $module_width, $module_height);
   
   // -------------------------------------------------- //
   //                        HRI

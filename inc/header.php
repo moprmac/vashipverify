@@ -13,8 +13,7 @@
 		</ul>
 	</div>
 	<div id="welcome">
-	Welcome: <?php echo htmlentities($_SESSION['user']['login'], ENT_QUOTES, 'UTF-8'); ?>.  <a href="http://usuiusa.com/va/shipverify/logout.php">Click here to logout or switch users.</a></br>
-	</br>
+	<p>Welcome: <?php echo htmlentities($_SESSION['user']['login'], ENT_QUOTES, 'UTF-8'); ?>.  <a href="http://usuiusa.com/va/shipverify/logout.php">Click here to logout or switch users.</a></p>
 	</div>
 <!--	<div id="content"> -->
 

@@ -90,28 +90,6 @@ if(isset($_GET['action']) && !empty($_GET['action'])) {
 			}
 			
 			break;
-		case 'SearchParts':
-			try
-			{
-				echo json_encode($plexObj->SearchParts($_GET[plexID], $_GET[partInfo]));
-			}
-			catch (Exception $e)
-			{
-				echo json_encode(array('error' => array('msg' => $e->getMessage(), 'code' => $e->getCode())));
-				//echo json_encode(array('Caught exception: '.  $e->getMessage()));
-			}
-			break;
-		case 'ReplacePart':
-			try
-			{
-				echo json_encode($plexObj->ReplacePart($_GET[plexID], $_GET[oldPartID], $_GET[newPartInfo], $_GET[replaceReason]));
-			}
-			catch (Exception $e)
-			{
-				echo json_encode(array('error' => array('msg' => $e->getMessage(), 'code' => $e->getCode())));
-				//echo json_encode(array('Caught exception: '.  $e->getMessage()));
-			}
-			break;
 		case 'AddRecord':
 			try
 			{

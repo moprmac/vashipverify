@@ -120,28 +120,6 @@ if(isset($_GET['action']) && !empty($_GET['action'])) {
 				echo json_encode(array('error' => array('msg' => $e->getMessage(), 'code' => $e->getCode())));
 			}
 			break;
-		case 'AddInternalPart':
-			// ToDO  add some verification here.
-			try
-			{
-				echo json_encode($partObj->AddInternalPart($_GET[partID]));
-			}
-			catch (Exception $e)
-			{
-				echo json_encode(array('error' => array('msg' => $e->getMessage(), 'code' => $e->getCode())));
-			}
-			break;
-		case 'RemoveInternalPart':
-			// ToDO  add some verification here.
-			try
-			{
-				echo json_encode($partObj->RemoveInternalPart($_GET[partID]));
-			}
-			catch (Exception $e)
-			{
-				echo json_encode(array('error' => array('msg' => $e->getMessage(), 'code' => $e->getCode())));
-			}
-			break;
 	}
 }
 ?>

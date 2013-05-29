@@ -1,6 +1,4 @@
 <?php
-include("SendMail.class.php");
-
 // Class used to interact with and get information back about PlexRecords
 class PlexInfo
 {
@@ -65,7 +63,7 @@ class PlexInfo
 				throw new Exception("Error:  Invalid input for ID value.");
 			}
 			
-			$stmt = $this->db->prepare("SELECT T1.PlexPartRecordID, T2.PartNum as PartNum, T1.PartSerialNum, T1.PartID, T1.Match_, T1.Duplicate, T1.ScanUser, concat(T3.first_name, ' ', T3.last_name) as UserName FROM PlexPartRecords T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) INNER JOIN UserDB T3 on (T1.ScanUser = T3.UserID) WHERE T1.PlexRecord = ? ORDER BY T1.PlexPartRecordID, T1.PartID, T1.PartSerialNum");
+			$stmt = $this->db->prepare("SELECT T1.PlexPartRecordID, T2.PartNum as PartNum, T1.PartSerialNum, T1.PartID, T1.Match_, T1.Duplicate FROM PlexPartRecords T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) WHERE T1.PlexRecord = ? ORDER BY T1.PlexPartRecordID, T1.PartID, T1.PartSerialNum");
 			if ($stmt->execute(array($plexID)))
 			{
 				// PDO::FETCH_ASSOC == Return as associatiave array, should do this by default based on db.inc
@@ -254,12 +252,10 @@ class PlexInfo
 			
 			$plexInfo = $this->GetStatusByID($plexID);
 			
-			/*
 			if ($plexInfo["Verified"])
 			{
 				throw new Exception("Error:  This record has already completed 100% verification.  Cannot add remove parts.");
 			}
-			*/
 			
 
 			$stmt = $this->db->prepare("SELECT PlexRecord, ScanUser, ScanTime, PartID, PartSerialNum, Match_, Duplicate FROM PlexPartRecords WHERE PLexRecord = ? AND PlexPartRecordID = ?");
@@ -273,8 +269,8 @@ class PlexInfo
 				$row = $stmt->fetch();
 				
 				// Copy into Error Table for history
-				$stmt = $this->db->prepare("INSERT INTO PlexPartErrors (PlexRecord, ScanUser, ScanTime, FixUser, FixTime, ErrorPartSerialNum, ErrorPartID, Match_, Duplicate) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-				if($stmt->execute(array($row["PlexRecord"], $row["ScanUser"], $row["ScanTime"], $_SESSION["user"]["UserID"], date('Y-m-d H:i:s'), $row["PartSerialNum"], $row["PartID"], $row["Match_"], $row["Duplicate"])))
+				$stmt = $this->db->prepare("INSERT INTO PlexPartErrors (PlexRecord, ScanUser, ScanTime, FixUser, FixTime, ErrorPartSerialNum, ErrorPartID, Match_, Duplicate) values (?, ?, ?, ?, NOW(), ?, ?, ?, ?)");
+				if($stmt->execute(array($row["PlexRecord"], $row["ScanUser"], $row["ScanTime"], $_SESSION["user"]["UserID"], $row["PartSerialNum"], $row["PartID"], $row["Match_"], $row["Duplicate"])))
 				{
 					// Remove invalid record
 					$stmt = $this->db->prepare("DELETE FROM PlexPartRecords WHERE PlexPartRecordID = ?");
@@ -489,8 +485,8 @@ class PlexInfo
 				}
 				
 				// Record doesn't exist, add it.
-				$stmt = $this->db->prepare("INSERT INTO  PlexRecords(ScanUser, ScanTime, PlexSerialNum, PartQty, PartID, Verified, Locked) VALUES (?, ?, ?, ?, ?, ?, ?)");
-				if ( $stmt->execute(array($_SESSION["user"]["UserID"], date('Y-m-d H:i:s'), $plexSN, $partQty, $partID["PartID"], $defaultVal, $defaultVal)) )
+				$stmt = $this->db->prepare("INSERT INTO  PlexRecords(ScanUser, ScanTime, PlexSerialNum, PartQty, PartID, Verified, Locked) VALUES (?, NOW(), ?, ?, ?, ?, ?)");
+				if ( $stmt->execute(array($_SESSION["user"]["UserID"], $plexSN, $partQty, $partID["PartID"], $defaultVal, $defaultVal)) )
 				{
 					// return ID:
 					return(array("PlexRecordID" => $this->db->lastInsertId()));
@@ -576,12 +572,6 @@ class PlexInfo
 		
 			$stmt = $this->db->prepare("UPDATE PlexRecords SET Locked = 1 WHERE PlexRecordID = ?");
 			$stmt->execute(array($plexID));
-			
-			// send email:
-			$plexInfo = $this->GetStatusByID($plexID);
-			$mailObj = new SendMail($this->db);
-			$mailObj->NotifySupervisor("Locked Record", "Internal Record " . $plexInfo["PlexSerialNum"] . " has been locked due to an error.");
-			
 		}
 		
 		public function DeleteRecord($plexID)
@@ -800,15 +790,10 @@ class PlexInfo
 		
 		public function Foo($bar)
 		{
-			// send email:
-			//$plexInfo = $this->GetStatusByID($plexID);
-			$mailObj = new SendMail($this->db);
-			//$mailObj->NotifySupervisor("Locked Record", "Internal Record 999999 has been locked due to an error.");
+			return ("I like it when there is " . $bar);
 		}
 		
-		// optional variable is added here so we can allow it to add a part after 100% scan is complete.  Useful
-		// for replace part.  Otherwise, disallow adding parts after 100% scan is complete.
-		public function AddPart($plexID, $partInfo, $override=false)
+		public function AddPart($plexID, $partInfo)
 		{
 			// Variables
 			$match = 1;
@@ -834,14 +819,10 @@ class PlexInfo
 				throw new Exception("Error:  This record is locked.  Cannot add new parts.");
 			}
 			
-			if (!$override)
+			if ($plexInfo["Verified"])
 			{
-				if ($plexInfo["Verified"])
-				{
-					throw new Exception("Error:  This record has already completed 100% verification.  Cannot add new parts.");
-				}
+				throw new Exception("Error:  This record has already completed 100% verification.  Cannot add new parts.");
 			}
-			
 			
 			// Are there alternate parts?
 			$stmt = $this->db->prepare
@@ -924,8 +905,8 @@ class PlexInfo
 							throw new Exception("Error:  Part $partNum with Part ID $partID is not a valid match.");
 						}
 						
-						$stmt = $this->db->prepare("INSERT INTO PlexPartRecords (PlexRecord, ScanUser, ScanTime, PartSerialNum, PartID, Match_, Duplicate) values (?, ?, ?, ?, ?, ?, ?)");
-						if ($stmt->execute(array($plexID, $_SESSION['user']['UserID'], date('Y-m-d H:i:s'), $serialNum, $partID, $match, $duplicate)))
+						$stmt = $this->db->prepare("INSERT INTO PlexPartRecords (PlexRecord, ScanUser, ScanTime, PartSerialNum, PartID, Match_, Duplicate) values (?, ?, NOW(), ?, ?, ?, ?)");
+						if ($stmt->execute(array($plexID, $_SESSION['user']['UserID'], $serialNum, $partID, $match, $duplicate)))
 						{
 							$lastInsertID = $this->db->lastInsertId();
 							// update plexRecord if $match or $duplicate = 1
@@ -1001,8 +982,8 @@ class PlexInfo
 		
 		public function InsertError($plexID, $partInfo, $reason)
 		{
-			$stmt = $this->db->prepare("INSERT INTO PlexInvalidEntryLog (PlexRecord, PartInfo, ScanUser, ScanTime, ErrorReason) VALUES (?, ?, ?, ?, ?)");
-			if ($stmt->execute(array($plexID, $partInfo, $_SESSION['user']['UserID'], date('Y-m-d H:i:s'), $reason)))
+			$stmt = $this->db->prepare("INSERT INTO PlexInvalidEntryLog (PlexRecord, PartInfo, ScanUser, ScanTime, ErrorReason) VALUES (?, ?, ?, NOW(), ?)");
+			if ($stmt->execute(array($plexID, $partInfo, $_SESSION['user']['UserID'], $reason)))
 			{
 				$this->LockRecord($plexID);
 			}
@@ -1020,7 +1001,7 @@ class PlexInfo
 				throw new Exception("Error:  Invalid input for ID value.");
 			}
 			
-			$stmt = $this->db->prepare("SELECT t1.PlexRecord, t1.PartInfo, t1.ScanUser, concat(t2.first_name, ' ', t2.last_name) as UserName, t1.ScanTime, t1.ErrorReason FROM PlexInvalidEntryLog t1 inner join UserDB t2 on (t1.ScanUser = t2.UserID)  WHERE PlexRecord = ?");
+			$stmt = $this->db->prepare("SELECT PlexRecord, PartInfo, ScanUser, ScanTime, ErrorReason FROM PlexInvalidEntryLog WHERE PlexRecord = ?");
 			if ($stmt->execute(array($plexID)))
 			{
 				// PDO::FETCH_ASSOC == Return as associatiave array, should do this by default based on db.inc
@@ -1036,173 +1017,6 @@ class PlexInfo
 				throw new Exception("Error: Unable to execute query.");
 			}
 		
-		}
-		
-		public function SearchParts($plexID, $partInfo)
-		{
-			if ( is_null($plexID) and $plexID == "" and preg_match('/^\d+$/',$plexID) )
-			{
-				$this->InsertError($plexID, $partInfo, "Invalid input for Plex Record ID value in Add Part");
-				throw new Exception("Error:  Invalid input for ID value.");
-			}
-			
-			if ( is_null($partInfo) and $partInfo == "")
-			{
-				$this->InsertError($plexID, $partInfo, "Invalid input for part info value in Add Part");
-				throw new Exception("Error:  Invalid input for part info value.");
-			}
-			
-			$plexInfo = $this->GetStatusByID($plexID);
-			
-			// Are there alternate parts?
-			$stmt = $this->db->prepare
-				("SELECT
-					T1.PartID, T2.CorrespondingPartID, T4.RegularExpression
-				FROM
-					PlexParts T1
-					INNER JOIN PlexPartAlternatives T2 on (T1.PartID = T2.MainPartID)
-					INNER JOIN PartRegex T3 on (T2.CorrespondingPartID = T3.PartID)
-					INNER JOIN Regex T4 on (T3.RegexID = T4.RegexID)
-				WHERE
-					T1.PartID = ?
-					AND T1.Active = 1
-					AND T2.Active = 1
-				ORDER BY
-					T1.PartID, T2.CorrespondingPartID");
-			
-			$decodedPart = false;
-			if ($stmt->execute(array($plexInfo["PartID"])))
-			{
-				// If there are no altenrates, primary Regex
-				if ($stmt->rowCount() == 0)
-				{
-					// Get regex for part directly
-					$stmt = $this->db->prepare("SELECT RegularExpression FROM Regex INNER JOIN PartRegex ON ( Regex.RegexID = PartRegex.RegexID ) INNER JOIN PlexRecords ON ( PartRegex.PartID = PlexRecords.PartID ) WHERE PlexRecords.PlexRecordID = ?");
-					$row = $stmt->fetch();
-					if ($stmt->rowCount() == 0)
-					{
-						// no records found
-						$this->InsertError($plexID, $partInfo, "Unable to match to regular expression for part type");
-						throw new Exception("Error: No regular expression known for this part type.");
-					}
-					$decodedPart = $this->DecodePartInfo($row['RegularExpression'], $partInfo);
-				}
-				else
-				{
-					// If there are alternates, use their Regex, disregard the primary
-					// Get regex for alternate parts
-					while ($row = $stmt->fetch())
-					{
-						$decodedPart = $this->DecodePartInfo($row['RegularExpression'], $partInfo);
-						if ($decodedPart !== false)
-						{
-							// Have a match, exit out of loop
-							break;
-						}
-					}
-				}
-				
-				if ($decodedPart !== false)
-				{
-					// add part
-					$partID = $decodedPart[0];
-					$partNum = $decodedPart[1];
-					$serialNum = $decodedPart[2];
-					// Check for duplicate serial numbers
-					$stmt = $this->db->prepare("SELECT PartID, PartSerialNum FROM PlexPartRecords WHERE PlexRecord = ? AND PartID = ? AND PartSerialNum = ?");
-					if ($stmt->execute(array($plexID, $partID, $serialNum)))
-					{
-						if ($stmt->rowCount() == 0)
-						{
-							// No Duplicates Found
-							return array("Found" => false);
-						}
-						else
-						{
-							return array("Found" => true);
-						}
-					}
-				}
-				else
-				{
-					throw new Exception("Error:  Unable to match this part info to the list of valid parts.");
-				}
-			}
-			else
-			{
-				throw new Exception("Error: Unable to execute query.");
-			}
-		}
-		
-		public function ReplacePart($plexID, $oldPartID, $newPartInfo, $replaceReason)
-		{
-		
-			if ( is_null($plexID) || $plexID == "" || !preg_match('/^\d+$/',$plexID) )
-			{
-				throw new Exception("Error:  Invalid input for ID value.");
-			}
-			
-			if ( is_null($oldPartID) || $oldPartID == "" || !preg_match('/^\d+$/',$oldPartID) )
-			{
-				throw new Exception("Error:  Invalid input for old part id value.");
-			}
-			
-			if ( is_null($newPartInfo) || $newPartInfo == "")
-			{
-				throw new Exception("Error:  Invalid input for part info value.");
-			}
-			
-			if ( is_null($replaceReason) )
-			{
-				$replaceReason = "";
-			}
-			
-			// Get info about the part being removed:
-			$stmt = $this->db->prepare("SELECT PartSerialNum, ScanUser, ScanTime FROM PlexPartRecords WHERE PlexRecord = ? AND PlexPartRecordID = ?");
-			if ($stmt->execute(array($plexID, $oldPartID)))
-			{
-				if ($stmt->rowCount() != 0)
-				{
-					$row = $stmt->fetch();
-
-					// Insert dirty record
-					$stmt = $this->db->prepare("INSERT INTO PlexInvalidEntryLog (PlexRecord, PartInfo, ScanUser, ScanTime, ErrorReason) VALUES (?, ?, ?, ?, ?)");
-					if (!$stmt->execute(array($plexID, $row["PartSerialNum"], $row["ScanUser"], $row["ScanTime"], $replaceReason)))
-					{
-						throw new Exception("Error:  Unable to log error.");
-					}
-			
-					// remove the old part
-					try
-					{
-						$this->RemovePart($plexID, $oldPartID);
-					}
-					catch (Exception $e)
-					{
-						throw new Exception($e->getMessage());
-					}
-				
-					// add the new part
-					try
-					{
-						$this->AddPart($plexID, $newPartInfo, true);
-					}
-					catch (Exception $e)
-					{
-						throw new Exception($e->getMessage());
-					}
-					
-					return(array("ReplaceStatus" => true));
-				}
-				else
-				{
-					throw new Exception("Error:  Unable to find part to be replaced.");
-				}
-			}
-			else
-			{
-				throw new Exception("Error:  Unable to get info about part id:" . $oldPartID);
-			}
 		}
 }
 

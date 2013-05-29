@@ -43,7 +43,7 @@ $availableBarcodes = $barcodeInfo->GetAllAvailableBarcodes();
 </head>
 <body>
 <?php include("../inc/header.php")?>
-  <form action="generateLabels.php" method="post" id="editForm" onsubmit="return validateandconfirm();">
+  <form action="generateLabelsPDF.php" method="post" id="editForm" onsubmit="return validateandconfirm();" target="_blank">
   <div id="container" style="min-height:100%;">
     <h2>Generate a barcode.</h2>
     <div class="side-by-side clearfix">
@@ -51,7 +51,7 @@ $availableBarcodes = $barcodeInfo->GetAllAvailableBarcodes();
 		<h3> Part Number: </h3>
 	  </div>
       <div>
-        <select data-placeholder="Choose Part Number" class="chzn-select w250" tabindex="2" id="partNum" name="partNum" <?= !empty($currentVals)?'disabled':null ?>>
+        <select data-placeholder="Choose Part Number" class="chzn-select w250" tabindex="2" id="partNum" name="partNum">
           <option value=""></option> 
           <?php
 		  foreach($availableBarcodes as $part) {
@@ -140,13 +140,31 @@ $availableBarcodes = $barcodeInfo->GetAllAvailableBarcodes();
 	/* Generate preview */
 	function preview(){
 		var selectedOpt = $('#partNum option:selected');
-		$('#prevImg').attr('src', "barcode.php?code="+selectedOpt.data('bctext')+"&size="+selectedOpt.data('size'));
+		var bcText = makeReplacements(selectedOpt.data('bctext'));
+		$('#prevImg').attr('src', "barcode.php?code="+bcText+"&size="+(selectedOpt.data('size')+1));
 		$('#prevText').html(selectedOpt.data('hritext'));
 	}
 	$("#partNum").change(preview);
 	$('#editForm').submit(function(){
 		$('#partNum').removeAttr('disabled');
 	});
+
+	function makeReplacements(txt){
+		//$patterns = array("/{PartNumber}/", "/{Date1}/", "/{Date2}/", "/{Date3}/", "/{Serial}/");
+		//$replacements = array($partDetails['PartNum'], date('ymd'), date('ydm'), date('Ymd'), str_pad((string)$ser, 4, "0", STR_PAD_LEFT));
+		var date = new Date();
+		var curr_date = ("0" + date.getDate()).slice(-2);
+	    var curr_month = ("0" + (date.getMonth() + 1)).slice(-2); //Months are zero based
+	    var curr_fullyear = date.getFullYear();
+	    var curr_year = curr_fullyear.toString().slice(-2);
+	    console.log(curr_year+curr_month+curr_date);
+		txt = txt.replace(/{PartNumber}/, $('#partNum option:selected').text());
+		txt = txt.replace(/{Serial}/, "0001");
+		txt = txt.replace(/{Date1}/, curr_year+curr_month+curr_date);
+		txt = txt.replace(/{Date2}/, curr_year+curr_date+curr_month);
+		txt = txt.replace(/{Date3}/, curr_fullyear+curr_month+curr_date);
+		return txt;
+	} 
   </script>
 </body>
 <?php include("../inc/footer.php")?>

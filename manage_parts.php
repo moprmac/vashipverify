@@ -340,7 +340,6 @@ if(isset($_GET['plexRecNum']) && !empty($_GET['plexRecNum']) && preg_match('/^\d
 							throw data.error.msg;
 						}
 						
-						
 						// If error is thrown, script stops, otherwise, continue:
 						if (window.console) { console.log("Response From Add Parts"); }
 						updatePartList();
@@ -599,7 +598,7 @@ if(isset($_GET['plexRecNum']) && !empty($_GET['plexRecNum']) && preg_match('/^\d
 										$( "div#replacePart" ).dialog( "close" );
 										$("input#replacePartInfo").val("");
 										$("input#replaceReason").val("");
-										updatePartList();
+										updatePartList()
 										checkStatus();
 									}
 									else
@@ -609,7 +608,7 @@ if(isset($_GET['plexRecNum']) && !empty($_GET['plexRecNum']) && preg_match('/^\d
 										$( "div#replacePart" ).dialog( "close" );
 										$("input#replacePartInfo").val("");
 										$("input#replaceReason").val("");
-										updatePartList();
+										updatePartList()
 										checkStatus();
 									}
 								}
@@ -799,6 +798,15 @@ if(isset($_GET['plexRecNum']) && !empty($_GET['plexRecNum']) && preg_match('/^\d
 			</p>
 		</div>
 
+		
+<!--ed-->
+	<?php include("inc/footer.php")?>
+<!--/ed-->
+
+
+	</body>
+</html>
+		
 	<?
 }
 else
@@ -806,11 +814,3 @@ else
 	header("Location: index.php"); 
 	die("Redirecting to initial scan");
 }
-?>	
-</body>	
-	<?php include("inc/footer.php")?>
-</html>
-
-		
-
-

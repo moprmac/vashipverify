@@ -328,65 +328,15 @@ catch (Exception $e)
 				alert("Error:  No part selected.");
 			}
 		}
-
-		function toggleIntPartNum()
-		{
-			if ($("#IntPartNum").is(':checked'))
-			{
-				$.ajax({ url: '../classes/PartInfo.js_link.php',
-					data: {action: 'AddInternalPart', partID:<?=$_GET[partID]?>},
-					dataType:'json',
-					type: 'get',
-					success: function(data)
-					{
-						if (data.error)
-						{
-							// handle the error
-							//console.log(data.error);
-							alert("Error:" + data.error.msg);
-							throw data.error.msg;
-						}
-						
-						// If error is thrown, script stops, otherwise, continue:
-						//console.log("update successful");
-					}
-				});
-			}
-			else
-			{
-				$.ajax({ url: '../classes/PartInfo.js_link.php',
-					data: {action: 'RemoveInternalPart', partID:<?=$_GET[partID]?>},
-					dataType:'json',
-					type: 'get',
-					success: function(data)
-					{
-						if (data.error)
-						{
-							// handle the error
-							//console.log(data.error);
-							alert("Error:" + data.error.msg);
-							throw data.error.msg;
-						}
-						
-						// If error is thrown, script stops, otherwise, continue:
-						//console.log("update successful");
-					}
-				});
-			}
-		}
-
 		
 	</script>
 	<?php include("../inc/header.php")?>
     </head>
 	<body>
-
+		
 		<div id="divRetirePart">
 			<label>Part Number:&nbsp;&nbsp;<?=$partInfo["PartNum"]?></label><br/>
 			<label>Date Added:&nbsp;&nbsp;<?=$partInfo["DateAdded"]?></label><br/>
-			<form name="IntPartNum">
-				<label>Internal Part Number:</label><input type="checkbox" id="IntPartNum" value="" onchange="toggleIntPartNum();" <?=($partInfo['IntPartNum'] == 1) ? 'checked="checked"' : "";?>"/>
-			</form>
 			<form name="retirePart">
 				<label>Part Active:</label><input type="checkbox" id="active" value="active" onchange="toggleActive();" <?=($partInfo['Active'] == 1) ? 'checked="checked"' : "";?>"/>
 			</form>

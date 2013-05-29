@@ -1,0 +1,86 @@
+[18-Mar-2013 03:00:47 UTC] PHP Warning:  include(db.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:00:47 UTC] PHP Warning:  include(db.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:00:47 UTC] PHP Warning:  include() [<a href='function.include'>function.include</a>]: Failed opening 'db.php' for inclusion (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:00:47 UTC] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 46
+[18-Mar-2013 03:00:52 UTC] PHP Warning:  include(db.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:00:52 UTC] PHP Warning:  include(db.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:00:52 UTC] PHP Warning:  include() [<a href='function.include'>function.include</a>]: Failed opening 'db.php' for inclusion (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:00:52 UTC] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 46
+[18-Mar-2013 03:02:00 UTC] PHP Warning:  include(db.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:02:00 UTC] PHP Warning:  include(db.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:02:00 UTC] PHP Warning:  include() [<a href='function.include'>function.include</a>]: Failed opening 'db.php' for inclusion (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 2
+[18-Mar-2013 03:02:00 UTC] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 46
+[18-Mar-2013 14:26:34 UTC] PHP Parse error:  syntax error, unexpected T_ARRAY in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 62
+[18-Mar-2013 14:30:44 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 73
+[18-Mar-2013 14:30:44 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 73
+[18-Mar-2013 14:33:39 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 74
+[18-Mar-2013 14:33:39 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 74
+[18-Mar-2013 14:33:45 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 74
+[18-Mar-2013 14:33:45 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 74
+[18-Mar-2013 14:35:35 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 74
+[18-Mar-2013 14:35:35 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 74
+[18-Mar-2013 14:36:02 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 74
+[18-Mar-2013 14:36:02 UTC] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 74
+[18-Mar-2013 18:06:08 UTC] PHP Parse error:  syntax error, unexpected T_IF in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 118
+[18-Mar-2013 18:06:25 UTC] PHP Parse error:  syntax error, unexpected ',', expecting ']' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 127
+[18-Mar-2013 18:06:47 UTC] PHP Warning:  preg_match_all() [<a href='function.preg-match-all'>function.preg-match-all</a>]: Delimiter must not be alphanumeric or backslash in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 127
+[18-Mar-2013 18:09:34 UTC] PHP Warning:  preg_match_all() [<a href='function.preg-match-all'>function.preg-match-all</a>]: Delimiter must not be alphanumeric or backslash in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 130
+[18-Mar-2013 18:45:37 UTC] PHP Fatal error:  Call to undefined function GetStatusByID() in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 147
+[18-Mar-2013 18:46:05 UTC] PHP Parse error:  syntax error, unexpected T_OBJECT_OPERATOR in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 147
+[18-Mar-2013 18:59:43 UTC] PHP Parse error:  syntax error, unexpected T_OBJECT_OPERATOR in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 141
+[18-Mar-2013 19:00:29 UTC] PHP Parse error:  syntax error, unexpected T_OBJECT_OPERATOR in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 140
+[18-Mar-2013 19:22:47 UTC] PHP Parse error:  syntax error, unexpected ';' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 170
+[18-Mar-2013 19:44:02 UTC] PHP Parse error:  syntax error, unexpected T_PUBLIC in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 217
+[18-Mar-2013 19:56:32 UTC] PHP Fatal error:  Call to undefined method PDOStatement::lastInsertId() in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 179
+[19-Mar-2013 00:13:24 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 305
+[19-Mar-2013 00:13:28 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 305
+[19-Mar-2013 00:13:34 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 305
+[19-Mar-2013 00:13:42 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 305
+[19-Mar-2013 00:13:42 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 305
+[19-Mar-2013 00:13:43 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 305
+[19-Mar-2013 00:13:51 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 305
+[19-Mar-2013 00:14:42 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 305
+[19-Mar-2013 00:15:18 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 307
+[19-Mar-2013 00:15:36 UTC] PHP Parse error:  syntax error, unexpected ')', expecting ']' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 322
+[19-Mar-2013 00:15:52 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 332
+[19-Mar-2013 00:16:18 UTC] PHP Parse error:  syntax error, unexpected '-', expecting T_STRING or T_VARIABLE or '{' or '$' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 363
+[19-Mar-2013 00:20:14 UTC] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 320
+[24-Mar-2013 16:36:53 UTC] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 316
+[24-Mar-2013 17:18:17 UTC] PHP Parse error:  syntax error, unexpected '*' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.js_link.php on line 103
+[24-Mar-2013 17:18:47 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 405
+[24-Mar-2013 17:31:10 UTC] PHP Warning:  preg_match() [<a href='function.preg-match'>function.preg-match</a>]: Delimiter must not be alphanumeric or backslash in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 372
+[24-Mar-2013 17:56:36 UTC] PHP Parse error:  syntax error, unexpected ';' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 413
+[24-Mar-2013 20:26:54 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 457
+[24-Mar-2013 20:27:23 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 482
+[24-Mar-2013 21:41:46 UTC] PHP Parse error:  syntax error, unexpected '"', expecting T_STRING or T_VARIABLE or T_NUM_STRING in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 362
+[24-Mar-2013 21:42:19 UTC] PHP Parse error:  syntax error, unexpected T_ENCAPSED_AND_WHITESPACE, expecting T_STRING or T_VARIABLE or T_NUM_STRING in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexInfo.class.php on line 362
+[24-Mar-2013 23:42:44 UTC] PHP Fatal error:  Cannot access empty property in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.class.php on line 12
+[24-Mar-2013 23:43:18 UTC] PHP Warning:  Missing argument 2 for PlexShipInfo::AddRecord(), called in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.js_link.php on line 17 and defined in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.class.php on line 16
+[24-Mar-2013 23:43:18 UTC] PHP Warning:  Missing argument 3 for PlexShipInfo::AddRecord(), called in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.js_link.php on line 17 and defined in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.class.php on line 16
+[24-Mar-2013 23:44:59 UTC] PHP Fatal error:  Call to private method PlexInfo::ValidatePart() from context 'PlexShipInfo' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.class.php on line 38
+[25-Mar-2013 00:48:17 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.class.php on line 50
+[25-Mar-2013 00:48:19 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.class.php on line 50
+[31-Mar-2013 19:41:14 UTC] PHP Parse error:  syntax error, unexpected ';' in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PartInfo.js_link.php on line 17
+[31-Mar-2013 20:48:04 UTC] PHP Parse error:  syntax error, unexpected T_ENCAPSED_AND_WHITESPACE, expecting T_STRING or T_VARIABLE or T_NUM_STRING in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PartInfo.class.php on line 71
+[31-Mar-2013 20:48:08 UTC] PHP Parse error:  syntax error, unexpected T_ENCAPSED_AND_WHITESPACE, expecting T_STRING or T_VARIABLE or T_NUM_STRING in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PartInfo.class.php on line 71
+[31-Mar-2013 22:17:00 UTC] PHP Warning:  Missing argument 2 for PartInfo::UpdateRegex(), called in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PartInfo.js_link.php on line 61 and defined in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PartInfo.class.php on line 123
+[01-Apr-2013 03:55:12 UTC] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/usuiusa0/public_html/va/shipverify/Theory/classes/PlexShippingInfo.class.php on line 493
+[05-Apr-2013 04:42:11 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 395
+[07-Apr-2013 22:24:17 UTC] PHP Fatal error:  Call to a member function GetExpressions() on a non-object in /home/usuiusa0/public_html/va/shipverify/classes/RegexInfo.js_link.php on line 17
+[08-Apr-2013 04:47:26 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/usuiusa0/public_html/va/shipverify/classes/PlexShippingInfo.class.php on line 294
+[08-Apr-2013 04:47:35 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/usuiusa0/public_html/va/shipverify/classes/PlexShippingInfo.class.php on line 294
+[08-Apr-2013 04:48:07 UTC] PHP Parse error:  syntax error, unexpected '{' in /home/usuiusa0/public_html/va/shipverify/classes/PlexShippingInfo.class.php on line 294
+[08-Apr-2013 04:48:55 UTC] PHP Fatal error:  Call to undefined method PlexInfo::GetStatusBy() in /home/usuiusa0/public_html/va/shipverify/classes/PlexShippingInfo.class.php on line 286
+[08-Apr-2013 04:49:24 UTC] PHP Fatal error:  Call to undefined method PlexInfo::GetStatusBy() in /home/usuiusa0/public_html/va/shipverify/classes/PlexShippingInfo.class.php on line 286
+[11-Apr-2013 12:42:52 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 12:42:53 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 12:42:54 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 12:42:54 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 12:42:54 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 12:42:54 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 12:42:55 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 12:43:10 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 12:44:18 UTC] PHP Fatal error:  Call to undefined function ValidAlternate() in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 886
+[11-Apr-2013 16:28:52 UTC] PHP Warning:  PDOStatement::execute() expects at most 1 parameter, 2 given in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 978
+[11-Apr-2013 16:29:43 UTC] PHP Warning:  PDOStatement::execute() expects at most 1 parameter, 2 given in /home/usuiusa0/public_html/va/shipverify/classes/PlexInfo.class.php on line 978
+[25-Apr-2013 02:53:31 UTC] PHP Parse error:  syntax error, unexpected ')' in /home/usuiusa0/public_html/va/shipverify/classes/PlexShippingInfo.class.php on line 71

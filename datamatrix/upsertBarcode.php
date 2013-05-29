@@ -29,7 +29,7 @@ include_once '../inc/db.php';
 include_once '../classes/BarcodeInfo.class.php';
 
 $barcodeDAO = new BarcodeInfo($db);
-
+$isActive = ($_REQUEST['isActive'] == 'on')?'1':'0';
 $hriTextArr = explode("\n", trim($_REQUEST['hriText']));
 if(count($hriTextArr) > 4) { array_splice($hriTextArr, 4); }
 $hriText = implode('~|~', $hriTextArr);
@@ -38,13 +38,13 @@ try{
 	$bc = $barcodeDAO->GetBarcodeByPartId($_REQUEST['partNum']);
 	
 	if(empty($bc)){
-		$result = $barcodeDAO->SaveNewBarcode($_REQUEST['partNum'], $_REQUEST['size'], $_REQUEST['barcodeText'], $hriText);
+		$result = $barcodeDAO->SaveNewBarcode($_REQUEST['partNum'], $_REQUEST['size'], $_REQUEST['barcodeText'], $hriText, $isActive);
 	}
 	else{
-		$result = $barcodeDAO->UpdateBarcodeById($_REQUEST['partNum'], $_REQUEST['size'], $_REQUEST['barcodeText'], $hriText);
+		$result = $barcodeDAO->UpdateBarcodeById($_REQUEST['partNum'], $_REQUEST['size'], $_REQUEST['barcodeText'], $hriText, $isActive);
 	}
 	if($result){
-		header('Location: edit-barcode.php?id='.$_REQUEST['partNum']);
+		header('Location: index.php');
 	}
 }
 catch(Exception $e){

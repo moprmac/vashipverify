@@ -128,8 +128,8 @@ class PlexShipInfo
 					}
 					
 					// All good, Add Record.
-					$stmt = $this->db->prepare("INSERT INTO ShippingRecords (PlexRecord, ScanUser, ScanTime, PartQty, PartID, Verified, Locked) VALUES (?, ?, ?, ?, ?, ?, ?)");
-					if ($stmt->execute(array($plexInfo["PlexRecordID"], $_SESSION['user']['UserID'], date('Y-m-d H:i:s'), $partQty, $partID['PartID'], $defaultVal, $defaultVal)))
+					$stmt = $this->db->prepare("INSERT INTO ShippingRecords (PlexRecord, ScanUser, ScanTime, PartQty, PartID, Verified, Locked) VALUES (?, ?, NOW(), ?, ?, ?, ?)");
+					if ($stmt->execute(array($plexInfo["PlexRecordID"], $_SESSION['user']['UserID'], $partQty, $partID['PartID'], $defaultVal, $defaultVal)))
 					{
 						return(array("ShippingRecordID" => $this->db->lastInsertId()));
 					}
@@ -396,8 +396,8 @@ class PlexShipInfo
 					}
 					*/
 					
-					$stmt = $this->db->prepare("INSERT INTO ShippingRecordParts (ShippingRecordID, ScanUser, ScanTime, PartSerialNum, PartID, Match_, Duplicate, Valid) values (?, ?, ?, ?, ?, ?, ?, ?)");
-					if ($stmt->execute(array($shippingID, $_SESSION['user']['UserID'], date('Y-m-d H:i:s'), $serialNum, $partID, $match, $duplicate, $valid)))
+					$stmt = $this->db->prepare("INSERT INTO ShippingRecordParts (ShippingRecordID, ScanUser, ScanTime, PartSerialNum, PartID, Match_, Duplicate, Valid) values (?, ?, NOW(), ?, ?, ?, ?, ?)");
+					if ($stmt->execute(array($shippingID, $_SESSION['user']['UserID'], $serialNum, $partID, $match, $duplicate, $valid)))
 					{
 						$lastInsertID = $this->db->lastInsertId();
 						$validPart = true;
@@ -466,7 +466,7 @@ class PlexShipInfo
 				throw new Exception("Error:  Invalid input for ID value.");
 			}
 			
-			$stmt = $this->db->prepare("SELECT T1.ShippingRecordPartID, T2.PartNum as PartNum, T1.PartSerialNum, T1.PartID, T1.Match_, T1.Duplicate, T1.Valid, T1.ScanUser, concat(T3.first_name, ' ', T3.last_name) as UserName FROM ShippingRecordParts T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) INNER JOIN UserDB T3 on (T1.ScanUser = T3.UserID) WHERE T1.ShippingRecordID = ?");
+			$stmt = $this->db->prepare("SELECT T1.ShippingRecordPartID, T2.PartNum as PartNum, T1.PartSerialNum, T1.PartID, T1.Match_, T1.Duplicate, T1.Valid FROM ShippingRecordParts T1 INNER JOIN PlexParts T2 on (T1.PartID = T2.PartID) WHERE T1.ShippingRecordID = ?");
 			if ($stmt->execute(array($shippingID)))
 			{
 				// PDO::FETCH_ASSOC == Return as associatiave array, should do this by default based on db.inc
@@ -515,8 +515,8 @@ class PlexShipInfo
 				$row = $stmt->fetch();
 				
 				// Copy into Error Table for history
-				$stmt = $this->db->prepare("INSERT INTO ShippingPartErrors (ShippingRecordID, ScanUser, ScanTime, FixUser, FixTime, ErrorPartSerialNum, ErrorPartID, Match_, Duplicate, Valid) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-				if ($stmt->execute(array($row['ShippingRecordID'], $row['ScanUser'], $row['ScanTime'], $_SESSION["user"]["UserID"], date('Y-m-d H:i:s'), $row['PartSerialNum'], $row['PartID'], $row['Match_'], $row['Duplicate'], $row['Valid'])))
+				$stmt = $this->db->prepare("INSERT INTO ShippingPartErrors (ShippingRecordID, ScanUser, ScanTime, FixUser, FixTime, ErrorPartSerialNum, ErrorPartID, Match_, Duplicate, Valid) values (?, ?, ?, ?, Now(), ?, ?, ?, ?, ?)");
+				if ($stmt->execute(array($row['ShippingRecordID'], $row['ScanUser'], $row['ScanTime'], $_SESSION["user"]["UserID"], $row['PartSerialNum'], $row['PartID'], $row['Match_'], $row['Duplicate'], $row['Valid'])))
 				{
 					// Remove invalid record
 					$stmt = $this->db->prepare("DELETE FROM ShippingRecordParts WHERE ShippingRecordPartID = ?");

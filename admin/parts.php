@@ -162,7 +162,7 @@ if ( !$grantAccess )
 				<!-- don't think I need this, as it's set in the javascript-->
 				</p>
 			</form>
-			
+			<p>
 			<table id="partList" class="partList" border="1">
 				<thead>
 				<tr class="head">
@@ -177,7 +177,9 @@ if ( !$grantAccess )
 			</table>
 		</div>
 
-	</body>
+<!--ed-->
 	<?php include("../inc/footer.php")?>
-</html>
+<!--/ed-->
 		
+	</body>
+</html>
